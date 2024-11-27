@@ -1,5 +1,5 @@
 import express from 'express';
-import verifyEmail  from '../middleware/verifyEmail.js';
+import verifyEmail  from '../services/verifyEmail.js';
 
 const router = express.Router();
 

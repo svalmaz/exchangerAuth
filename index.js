@@ -6,7 +6,7 @@ app.use(express.json());
 app.use("/auth/code", router);
 
 
-const PORT = 3002;
+const PORT = 3000;
 
 app.listen(PORT, ()=>{
     console.log("Servert start");
