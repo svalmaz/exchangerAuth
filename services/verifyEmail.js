@@ -1,16 +1,17 @@
 import redisClient from '../extensions/redisClient.js';
 import axios from 'axios';
 import https from 'https';
+import  {JwtService}  from './auth/jwtService.js';
 async function authSendCode(email){
     const agent = new https.Agent({  
         rejectUnauthorized: false
       });
-    const code = Math.floor(100000 + Math.random() * 900000); 
-    
+    const code = Math.floor(1000 + Math.random() * 900); 
+    redisClient.redisSet(email, code)
     try {
         const response = await axios.post('http://svalmazchecks1-001-site1.ntempurl.com/api/email/send', {
             
-                "recipientEmail": "almaz.0.saparbaev@gmail.com",
+                "recipientEmail": email,
                 "subject": "asd",
                 "body": code.toString()
               
@@ -30,7 +31,9 @@ async function authVerifyCode(email, code){
     }
     else if (storedCode == code){
         await redisClient.redisDel(email);
-        return "Ok";
+        const jwtService = new JwtService('justCodeForEncode', {expiresIn : '15m'});
+        const token = jwtService.generateToken({ userEmail: email });
+        return token;
     }
     else{
         return "Invalid code";
